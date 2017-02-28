@@ -1,2 +1,2 @@
-# Mutable-Client-Buffer
-Allow users to have multiple per-device buffers which can play well with (or replace as well) the plugin clearbufferonmsg
+# znc-self-msg
+Allow self-message capability for all clients that connect to znc
