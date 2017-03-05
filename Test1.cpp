@@ -22,7 +22,7 @@ template <>
 void TModInfo<CSampleMod>(CModInfo& Info) {
     Info.SetWikiPage("Test1");
     Info.SetHasArgs(true);
-    Info.SetArgsHelpText("Add In France.");
+    Info.SetArgsHelpText("Add In France help text");
 }
 
-MODULEDEFS(CSampleMod, "To be used as a sample for writing modules")
+MODULEDEFS(CSampleMod, "Add In France")

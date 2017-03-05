@@ -30,7 +30,7 @@ template <>
 void TModInfo<CSampleMod>(CModInfo& Info) {
     Info.SetWikiPage("Test2");
     Info.SetHasArgs(true);
-    Info.SetArgsHelpText("Color code?");
+    Info.SetArgsHelpText("Color code help text");
 }
 
-MODULEDEFS(CSampleMod, "To be used as a sample for writing modules")
+MODULEDEFS(CSampleMod, "Color code?")
