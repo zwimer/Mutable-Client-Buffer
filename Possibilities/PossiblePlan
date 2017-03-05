@@ -1,5 +1,3 @@
-Our idea:
-
 Keep map<User, msg> stored, call it MM
 	Update MM whenever OnUserMsg is called
 		MM[user] = Msg;
