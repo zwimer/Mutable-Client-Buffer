@@ -35,10 +35,14 @@ Set NV ? (look into)
 
 CChan - http://docs.znc.in/classCChan.html
 
-On Priv Buffer Starting - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
+OnPrivateBufferStarting - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
 
-On Priv Buffer Ending - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
+OnPrivateBufferEnding - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
 
-On Prive Buffer Play Message - http://docs.znc.in/classCModule.html#aa2236f951c590ea372a6ebc6fc5645ca
+OnPrivateBufferPlayMessage - http://docs.znc.in/classCModule.html#aa2236f951c590ea372a6ebc6fc5645ca
 
-std::set<CModuleJob*> CModule::m_sJobs protected variable- http://docs.znc.in/classCModule.html#a0f30eae029b7d126173ed8862f09ae5c
+OnChanBufferStarting - http://docs.znc.in/classCModule.html#a16989f4f4bb4d2162728a37a298220d5
+
+OnChanBufferPlayMessage - http://docs.znc.in/classCModule.html#a3cfe7fae36b09dd33b2532b87802de77
+
+std::set<CModuleJob*> CModule::m_sJobs (m_sJobs a protected variable) - http://docs.znc.in/classCModule.html#a0f30eae029b7d126173ed8862f09ae5c
