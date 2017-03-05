@@ -20,9 +20,9 @@ class CSampleMod : public CModule
 };
 template <>
 void TModInfo<CSampleMod>(CModInfo& Info) {
-    Info.SetWikiPage("sample");
+    Info.SetWikiPage("Test1");
     Info.SetHasArgs(true);
-    Info.SetArgsHelpText("Description of module arguments goes here.");
+    Info.SetArgsHelpText("Add In France.");
 }
 
 MODULEDEFS(CSampleMod, "To be used as a sample for writing modules")
