@@ -1,0 +1,44 @@
+PutUser - Messages Self Directly
+Can you hide messages received from the user.
+Create new user, send message to it and send it back to yourself.
+Add something to log without sending it.
+
+Nick = person sending message
+
+On Priv Msg - Incoming message
+
+Functions to look at - 
+
+virtual EModRet CModule::OnChanBufferStarting	(	CChan & 	Chan,
+CClient & 	Client 
+)		
+Called before a channel buffer is played back to a client.
+
+Parameters
+Chan	The channel which will be played back.
+Client	The client the buffer will be played back to.
+Returns
+See CModule::EModRet.
+
+
+virtual EModRet CModule::OnChanBufferPlayMessage	(	CMessage & 	Message	)	
+Called for each message during a channel's buffer play back.
+
+Since
+1.7.0
+Parameters
+Message	The playback message.
+
+http://docs.znc.in/classCModule.html#a16989f4f4bb4d2162728a37a298220d5 - Reference for Modules
+
+Set NV ? (look into)
+
+CChan - http://docs.znc.in/classCChan.html
+
+On Priv Buffer Starting - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
+
+On Priv Buffer Ending - http://docs.znc.in/classCModule.html#a2130b5edf2a6e3922be87fe1ac3491ea
+
+On Prive Buffer Play Message - http://docs.znc.in/classCModule.html#aa2236f951c590ea372a6ebc6fc5645ca
+
+std::set<CModuleJob*> CModule::m_sJobs protected variable- http://docs.znc.in/classCModule.html#a0f30eae029b7d126173ed8862f09ae5c
