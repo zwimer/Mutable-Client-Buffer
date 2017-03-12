@@ -34,7 +34,7 @@ public:
 		CBuffer * buf = (CBuffer*) & (ch.GetBuffer());
 
 		// Record the contents of the buffer
-		std::stringstream s2; s2 << buf; 
+		std::stringstream s; s << buf; 
 
 		// Save the contents to a file
 		std::ofstream f("/Users/zwimer/Desktop/testing_out.txt");
