@@ -21,11 +21,11 @@ public:
 	}
 
 	//When the system is booted up (nothing needs to happen)
-    bool OnBoot() override {
-        // This is called when the app starts up (only modules that are loaded
-        // in the config will get this event)
-        return true;
-    }
+	bool OnBoot() override {
+		// This is called when the app starts up (only modules that are loaded
+		// in the config will get this event)
+		return true;
+	}
 
 	//Intercept the buffer being sent to the user
 	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override {
@@ -68,9 +68,9 @@ private:
 
 // Information for the web client
 template <> void TModInfo<CSampleMod>(CModInfo& Info) {
-    Info.SetWikiPage("My wiki page");
-    Info.SetHasArgs(false);
-    // Info.SetArgsHelpText("Args help text"); // Not needed, no args
+	Info.SetWikiPage("My wiki page");
+	Info.SetHasArgs(false);
+	// Info.SetArgsHelpText("Args help text"); // Not needed, no args
 }
 
 // 'Register' this mod as a mod
