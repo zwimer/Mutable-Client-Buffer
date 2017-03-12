@@ -1,5 +1,6 @@
 #include <znc/Modules.h>
 #include <znc/Client.h>
+#include <znc/Query.h>
 #include <znc/Chan.h>
 
 #include <string>
@@ -22,7 +23,7 @@ class CSampleMod : public CModule
         return true;
     }
 
-	//Test reading the buffer
+	//Intercept the buffer being sent to the user
 	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override {
 
 		//Get a mutable version of the buffer
@@ -38,9 +39,24 @@ class CSampleMod : public CModule
 		return CONTINUE;
 	}
 
-	EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client) override {
-		return CONTINUE;
+	//Read all messages the user sends
+	EModRet OnUserMsg(CString& sTarget, CString& sMessage) {
+		
+		//Determine ones sent to the general chat
+		std::stringstream s;
+		s << sTarget << " said " << sMessage << '|';
+		
+		std::ofstream f("/Users/zwimer/Desktop/Sent_what_where.txt", std::ofstream::app);
+		f << s.str(); f.close();
+
 	}
+
+	//EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client) override { return CONTINUE; }
+
+private:
+
+	//Representation
+	//std::map<CString, 
 
 };
 template <>
