@@ -12,6 +12,7 @@ class CSampleMod : public CModule
         return true;
     }
 
+    //When a user sends a message, appends "in France" to it.
    	EModRet OnUserMsg(CString& sTarget, CString& sMessage) override {
         PutModule("[" + sTarget + "] usermsg [" + sMessage + "]");
         sMessage = sMessage + " in France";

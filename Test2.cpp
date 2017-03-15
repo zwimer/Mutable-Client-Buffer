@@ -14,12 +14,14 @@ class CSampleMod : public CModule
         return true;
     }
 
+    //When a user sends a message, colors it red and appends "in France" to it.
    	EModRet OnUserMsg(CString& sTarget, CString& sMessage) override {
         PutModule("[" + sTarget + "] usermsg [" + sMessage + "]");
         sMessage = "\0034" + sMessage + " in France\003";
         return CONTINUE;
-	}
+	  }
 	
+    //When a user receives a message, bolds it and appends "in France" to it.
    	EModRet OnPrivMsg(CNick& Nick, CString& sMessage) override {
         PutModule("[" + Nick.GetNick() + "] usermsg [" + sMessage + "]");
         sMessage = "\002" + sMessage + " in France\002";

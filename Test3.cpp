@@ -8,6 +8,7 @@ class CSampleMod : public CModule
    		MODCONSTRUCTOR(CSampleMod) {}
    	    ~CSampleMod() override { PutModule("I'm being unloaded!"); }
 
+    //Displays this message when the client logs in.
 	void OnClientLogin() override {
 		PutUser(":irc.znc.in 422 :MOTD Wassup brah, you've connected to us, bro. Time to get your bro-seff on, bro.");
 	}
