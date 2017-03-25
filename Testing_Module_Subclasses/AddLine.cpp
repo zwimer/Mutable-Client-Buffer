@@ -12,7 +12,7 @@ class CSampleMod : public CModule {
 public:
 
 	//Constructor and destructor
-	MODCONSTRUCTOR(CSampleMod) {}
+	MODCONSTRUCTOR(CSampleMod) { gettimeofday(&tv, NULL); }
 	~CSampleMod() override { PutModule("I'm being unloaded!"); }
 
 	//When the client logs in, set the M.O.T.D.
@@ -46,8 +46,8 @@ public:
 		}
 
 		// Add 'Bro' to the end of the buffer
-		static const CString str("Bro");
-		buf->AddLine( cs, str );
+		static const CString str("<- This is when I was loaded");
+		buf->AddLine( cs, str, & tv );
 
 		// Record the contents of the buffer to a file
 		std::ofstream f2("/Users/zwimer/Desktop/AddLine_out_1.txt");
@@ -63,6 +63,10 @@ public:
 
 	// Versions 1.7+
 	// EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client) override;
+private:
+
+    struct timeval tv;
+
 };
 
 // Information for the web client
