@@ -45,7 +45,7 @@ public:
 			  << "\nFormat: " << buf->GetBufLine(i).GetFormat();
 		}
 
-		// Add 'Bro' to the end of the buffer
+		// Add "<- This is when I was loaded" to the end of the buffer
 		static const CString str("<- This is when I was loaded");
 		buf->AddLine( cs, str, & tv );
 
