@@ -41,7 +41,7 @@ public:
 			  << "\nFormat: " << buf->GetBufLine(i).GetFormat();
 		}
 
-		// Add 'Bro' to the end of the buffer
+		// Adding "<- This is when I was loaded" to the end of the buffer
 		const CString tmp("zwimer");
 		CString cs(":");
 		cs += ch.FindNick(tmp)->GetHostMask();
