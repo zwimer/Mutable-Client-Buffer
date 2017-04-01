@@ -22,6 +22,12 @@ We will override 2 functions:
 OnUserMessage(who, what):
 	sent[who] = new Msg( <current time> , what );
 
+
+
+-- Done up to here (untested)
+
+
+
 OnChanBufferStarting(chan):
 
 	// Get rep exposure of chan
