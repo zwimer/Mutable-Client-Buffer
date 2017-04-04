@@ -97,11 +97,11 @@ public:
 	//When the system is booted up (nothing needs to happen)
 	bool OnBoot() override;
 
-	// Intercept the buffer being sent to the user
-	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override;
-
 	//Read all messages the user sends
 	EModRet OnUserMsg(CString& sTarget, CString& sMessage) override;
+
+	// Intercept the buffer being sent to the user
+	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override;
 
 	// Versions 1.7+
 	// EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client) override;
@@ -143,11 +143,24 @@ bool SelfMsg::OnBoot() {
 	return true;
 }
 
+//Read all messages the user sends
+SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
+	
+	// Record the time
+	timeval v; gettimeofday( &v, nullptr ); 
+
+	// Record what was sent where and when
+	sent[who].push( SelfMsgHelpers::Msg(v , sMessage) );
+
+	// Nothing bad happened
+	return CONTINUE;
+}
+
 // Intercept the buffer being sent to the user
 SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
 	// New buffer's lines
-	BufLineList newBufLines;
+	SelfMsgHelpers::BufLineList newBufLines;
 
 	// Get a mutable version of the buffer
 	CBuffer * buf = (CBuffer*) & ch.GetBuffer();
@@ -157,16 +170,19 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	format += " PRIVMSG #rpisec :{text}";
 
 	// Update each line's who in sent
-	for ( Msg & i : sent ) { i.format = format; }
+	for ( SelfMsgHelpers::Msg & i : sent[ch.GetName()] ) {
+		i.format = format;
+	}
 
 	// Add each line in the buf to sent
 	const int n = buf->GetLineCount();
 	for ( int i = 0; i < n; i++ ) {
 		const CBufLine & tmp = buf->GetBufLine( i );
-		sent.push( Msg( tmp->GetTime(), 
-						tmp->GetText(), 
-						tmp->GetFormat() 
-				 ) );
+		sent[ch.GetName()].push( SelfMsgHelpers::Msg( 
+									tmp.GetTime(), 
+									tmp.GetText(), 
+									tmp.GetFormat() )
+		);
 	}
 
 	// Update buf with the entries in newBufLines
@@ -177,20 +193,7 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	}
 	
 	// Clear the (now old) sent buffer
-	sent.clear();
-
-	// Nothing bad happened
-	return CONTINUE;
-}
-
-//Read all messages the user sends
-SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
-	
-	// Record the time
-	timeval v; gettimeofday( &v, nullptr ); 
-
-	// Record what was sent where and when
-	sent[who].push( v , sMessage );
+	sent[ch.GetName()].clear();
 
 	// Nothing bad happened
 	return CONTINUE;
