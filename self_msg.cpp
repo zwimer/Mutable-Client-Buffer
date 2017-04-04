@@ -3,9 +3,9 @@
 #include <znc/Query.h>
 #include <znc/Chan.h>
 
-#include <priority_queue>
 #include <sstream>
 #include <vector>
+#include <queue>
 
 
 /************************************************************/
@@ -18,12 +18,12 @@
 // Don't pollute the global namespace
 namespace SelfMsgHelpers {
 
-	// Represents a message
-	struct MsgCompare;
+	// A message class
 	struct Msg;
 
-	// Compares BufLines 
-	struct BufLineCompare
+	// Comparators
+	struct BufLineCompare;
+	struct MsgCompare;
 
 	// For clarity: MsgLine
 	typedef std::priority_queue <
@@ -40,6 +40,44 @@ namespace SelfMsgHelpers {
 	> BufLineList;
 
 };
+
+/************************************************************/
+/*															*/
+/*						Helper classes						*/
+/*															*/
+/************************************************************/
+
+
+// Represents a message
+struct SelfMsgHelpers::Msg {
+
+	// Constructors and destructor
+	Msg(const timeval& whn, const CString wht) : when(whn), what(wht) {}
+	Msg(const timeval& whn, const CString wht, const CString & fmt) : 
+		when(whn), what(wht), format(fmt) {}
+	~Msg() {}
+
+	// Representation
+	const timeval when;
+	const CString what;
+	CString format;
+};
+
+// Define a comparator for Msg
+struct SelfMsgHelpers::MsgCompare {
+	bool operator() (const Msg& a, const Msg& b) {
+		return timercmp( & a.when, & b.when, < );
+	}
+};
+
+// Compares BufLines 
+struct SelfMsgHelpers::BufLineCompare {
+	bool operator() (const CBufLine& a, const CBufLine & b) {
+		timeval atr = a.GetTime(), btr = b.GetTime();
+		return timercmp( & atr, & btr, < );
+	}
+};
+
 
 /************************************************************/
 /*															*/
@@ -71,7 +109,7 @@ public:
 private:
 
 	// Store what messages the user sent to who
-	std::map< CString, SelfMsgHelper::MsgList > sent;
+	std::map< CString, SelfMsgHelpers::MsgList > sent;
 };
 
 
@@ -99,99 +137,71 @@ template <> void TModInfo<SelfMsg>(CModInfo& Info) {
 
 
 //When the system is booted up (nothing needs to happen)
-bool SelfMsg::OnBoot() override {
+bool SelfMsg::OnBoot() {
 	// This is called when the app starts up (only modules that are loaded
 	// in the config will get this event)
 	return true;
 }
 
 // Intercept the buffer being sent to the user
-EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) override {
+SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
-#if 0
-	// The new format we will be using below
-	static const CString cs(":zwimer!zwimer@net-pd2sh0.res."
-							"rr.com PRIVMSG #rpisec :{text}");
+	// New buffer's lines
+	BufLineList newBufLines;
 
 	// Get a mutable version of the buffer
 	CBuffer * buf = (CBuffer*) & ch.GetBuffer();
 
-	// Record the contents of the buffer to a file
-	std::ofstream f("/Users/zwimer/Desktop/testing_out_altered.txt");
-	for( unsigned int i = 0; i < buf->GetLineCount(); ++i ) {
+	// Get user's hostmask, and create a format from it
+	CString format = ch.FindNick(cli.GetNick())->GetHostMask();
+	format += " PRIVMSG #rpisec :{text}";
 
-		// Record the text, unix time stamp, format it was sent in
-		f << "\nText: " << buf->GetBufLine(i).GetText()
-		  << "\nTime: " << buf->GetBufLine(i).GetTime().tv_sec 
-		  << "\nFormat: " << buf->GetBufLine(i).GetFormat();
+	// Update each line's who in sent
+	for ( Msg & i : sent ) { i.format = format; }
 
-		// If time != 0 (real post), change the format of the current line
-		if (buf->GetBufLine(i).GetTime().tv_sec) {
-			((CBufLine*) & buf->GetBufLine(i))->SetFormat( cs );
-		}
-
-		// Record the format
-		f << "\nNew Format: " << buf->GetBufLine(i).GetFormat() << '\n';
+	// Add each line in the buf to sent
+	const int n = buf->GetLineCount();
+	for ( int i = 0; i < n; i++ ) {
+		const CBufLine & tmp = buf->GetBufLine( i );
+		sent.push( Msg( tmp->GetTime(), 
+						tmp->GetText(), 
+						tmp->GetFormat() 
+				 ) );
 	}
-#endif
+
+	// Update buf with the entries in newBufLines
+	for ( buf->Clear(); newBufLines.size(); newBufLines.pop() ) {
+		const Msg & nxt = newBufLines.top();
+		buf->AddLine( nxt.format, nxt.what );
+		((CBufLine*) &(buf->GetBufLine(buf->GetLineCount())))->SetTime( nxt.when );
+	}
+	
+	// Clear the (now old) sent buffer
+	sent.clear();
 
 	// Nothing bad happened
 	return CONTINUE;
 }
 
 //Read all messages the user sends
-EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) override {
+SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
 	
 	// Record the time
 	timeval v; gettimeofday( &v, nullptr ); 
 
 	// Record what was sent where and when
-	sent[who].push_back( v , sMessage );
+	sent[who].push( v , sMessage );
 
 	// Nothing bad happened
 	return CONTINUE;
 }
 
 // Versions 1.7+
-// EModRet SelfMsg::OnPrivBufferStarting(CQuery& Query, CClient& Client) override;
+// SelfMsg::EModRet SelfMsg::OnPrivBufferStarting(CQuery& Query, CClient& Client) { }
 
 
 // 'Register' this mod as a mod
 MODULEDEFS(SelfMsg, "Change a public buf")
-
-
-/************************************************************/
-/*															*/
-/*						Helper classes						*/
-/*															*/
-/************************************************************/
-
-
-// Represents a message
-struct SelfMsgHelper::Msg {
-
-	// Constructors and destructor
-	Msg(const timeval& whn, const CString wht) : when(whn), what(wht) {}
-	~Msg() {}
-
-	// Representation
-	const CString what;
-	const timeval when;
-};
-
-// Define a comparator for Msg
-struct SelfMsgHelper::MsgCompare {
-	bool operator() (const Msg& a, const Msg& b) {
-		return timercmp( a.when, b.when, < );
-	}
-};
-
-// Compares BufLines 
-struct SelfMsgHelper::BufLineCompare {
-	bool operator() (const CBufLine& a, const CBufLine & b) {
-		return timercmp( a.GetTime(), b.GetTime(), < );
-	}
-};
 
 
 /************************************************************/
