@@ -7,6 +7,9 @@
 #include <vector>
 #include <queue>
 
+//TODO
+#include <fstream>
+# define log(x) { std::ofstream m("/Users/zwimer/Desktop/log.txt", std::ios::app); m << __PRETTY_FUNCTION__ << " - " << __LINE__ << ": " << x << std::endl; m.close();}
 
 /************************************************************/
 /*															*/
@@ -69,11 +72,17 @@ struct SMH::Msg {
 struct SMH::MsgCompare {
 	bool operator() (const Msg& a, const Msg& b) {
 //TODO: 0 comes last
-		return timercmp( & a.when, & b.when, < );
+		return timercmp( & a.when, & b.when, > );
 	}
 };
 
 //TODO: const cast
+
+//TODO: remove
+std::ostream & operator << (std::ostream & str, const SMH::Msg s) {
+	str << "Msg( " << s.when.tv_sec << ", " << s.what << ", " << s.format;
+	return str;
+}  
 
 /************************************************************/
 /*															*/
@@ -121,7 +130,6 @@ template <> void TModInfo<SelfMsg>(CModInfo& Info) {
 //TODO
 	Info.SetWikiPage("My wiki page");
 	Info.SetHasArgs(false);
-	// Info.SetArgsHelpText("Args help text"); // Not needed, no args
 }
 
 
@@ -148,6 +156,10 @@ SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
 	// Record what was sent where and when
 	sent[who].push( SMH::Msg(v , sMessage) );
 
+	//TODO:
+	std::stringstream s; s << who << " sent " << sMessage << '\n';
+	log(s.str());
+
 	// Nothing bad happened
 	return CONTINUE;
 }
@@ -160,7 +172,15 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
 	// Get user's hostmask, and create a format from it
 	CString format = ch.FindNick(cli.GetNick())->GetHostMask();
-	format += " PRIVMSG #rpisec :{text}";
+
+	//TODO:
+	std::stringstream s; 
+	s << "Startup: Intercept buf from " << ch.GetName() << '\n';
+	s << "\t - Nick = " << cli.GetNick() << '\n';
+	s << "\t - HM = " << format << '\n';
+	s << "Adding lines now:" << '\n';
+
+	format = ":" + format + " PRIVMSG #rpisec :{text}";
 
 	// The new buffer to be used;Make the list of sent messages the new buffer
 	SMH::MsgList newBuf;
@@ -169,6 +189,7 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	for ( SMH::MsgList & mySent = sent[ch.GetName()] ; mySent.size(); mySent.pop() ) {
 		((SMH::Msg*) (&mySent.top()))->format = format;
 		newBuf.push(mySent.top());
+		s << "\t\t Added (sent): " << mySent.top() << '\n';
 	}
 
 	// Add each line in the buf to sent
@@ -176,6 +197,7 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	for ( int i = 0; i < n; i++ ) {
 		const CBufLine & tmp = buf->GetBufLine( i );
 		newBuf.push( SMH::Msg( tmp.GetTime(), tmp.GetText(), tmp.GetFormat() ) );
+		s << "\t\t Added (buf): " << SMH::Msg( tmp.GetTime(), tmp.GetText(), tmp.GetFormat() )<< '\n';
 	}
 
 	// Clear the old buf
@@ -184,10 +206,13 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	// Update buf with the entries in newBufLines
 	for ( int i = 0; newBuf.size(); newBuf.pop() ) {
 		const SMH::Msg & nxt = newBuf.top();
+		s << "\t\t\t NEW: " << nxt << '\n';
 		buf->AddLine( nxt.format, nxt.what );
 		((CBufLine*) &(buf->GetBufLine(i++)))->SetTime( nxt.when );
 	}
 	
+	log(s.str());
+
 	// Clear the (now old) sent buffer
 	SMH::MsgList & m = sent[ch.GetName()];
 	while (m.size()) m.pop();
