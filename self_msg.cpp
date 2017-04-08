@@ -50,9 +50,18 @@ struct SMH::Msg {
 		when(whn), what(wht), format(fmt) {}
 	~Msg() {}
 
+	// Assignment operator
+	Msg & operator= ( const Msg & m ) {
+		when.tv_usec = m.when.tv_usec;
+		when.tv_sec = m.when.tv_sec;
+		format = m.format;
+		what = m.what;
+		return * this;
+	}
+
 	// Representation
-	const timeval when;
-	const CString what;
+	timeval when;
+	CString what;
 	CString format;
 };
 
@@ -64,6 +73,7 @@ struct SMH::MsgCompare {
 	}
 };
 
+//TODO: const cast
 
 /************************************************************/
 /*															*/
@@ -157,26 +167,25 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
 	// Update each line's who in sent, and add them all to newBuf
 	for ( SMH::MsgList & mySent = sent[ch.GetName()] ; mySent.size(); mySent.pop() ) {
+		((SMH::Msg*) (&mySent.top()))->format = format;
 		newBuf.push(mySent.top());
-		newBuf.top().format = format;
 	}
 
 	// Add each line in the buf to sent
 	const int n = buf->GetLineCount();
 	for ( int i = 0; i < n; i++ ) {
 		const CBufLine & tmp = buf->GetBufLine( i );
-		newBuf.push( SMH::Msg( 
-						tmp.GetTime(), 
-						tmp.GetText(), 
-						tmp.GetFormat() )
-		);
+		newBuf.push( SMH::Msg( tmp.GetTime(), tmp.GetText(), tmp.GetFormat() ) );
 	}
 
+	// Clear the old buf
+	buf->Clear();
+
 	// Update buf with the entries in newBufLines
-	for ( buf->Clear(); newBuf.size(); newBuf.pop() ) {
+	for ( int i = 0; newBuf.size(); newBuf.pop() ) {
 		const SMH::Msg & nxt = newBuf.top();
 		buf->AddLine( nxt.format, nxt.what );
-		((CBufLine*) &(buf->GetBufLine(buf->GetLineCount())))->SetTime( nxt.when );
+		((CBufLine*) &(buf->GetBufLine(i++)))->SetTime( nxt.when );
 	}
 	
 	// Clear the (now old) sent buffer
