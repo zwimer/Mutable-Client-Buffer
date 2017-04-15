@@ -7,8 +7,12 @@
 #include <vector>
 #include <queue>
 
-// Debug mode
+
+// Enable debug mode
 #define DEBUG_MODE
+
+
+// Debug mode
 #ifdef DEBUG_MODE
 
 	#include <fstream>
@@ -86,11 +90,11 @@ struct SMH::MsgCompare {
 
 #ifdef DEBUG_MODE
 
-// Print a Msg
-std::ostream & operator << (std::ostream & str, const SMH::Msg s) {
-	str << "Msg( " << s.when.tv_sec << ", " << s.what << ", " << s.format;
-	return str;
-}  
+	// Print a Msg
+	std::ostream & operator << (std::ostream & str, const SMH::Msg s) {
+		str << "Msg( " << s.when.tv_sec << ", " << s.what << ", " << s.format;
+		return str;
+	}  
 
 #endif
 
