@@ -138,8 +138,6 @@ private:
 
 // Information for the web client
 template <> void TModInfo<SelfMsg>(CModInfo& Info) {
-//TODO
-	Info.SetWikiPage("My wiki page");
 	Info.SetHasArgs(false);
 }
 
@@ -177,10 +175,7 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
 	// Get user's hostmask, and create a format from it
 	CString format = ch.FindNick(cli.GetNick())->GetHostMask();
-
-	// Complete the format string
-	format = ":" + format + " PRIVMSG ";
-	format += ch.GetName() + " :{text}";
+	format = ":" + format + " PRIVMSG " + ch.GetName() + " :{text}";
 
 	// The new buffer to be used
 	SMH::MsgList newBuf;
@@ -228,4 +223,4 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 
 
 // 'Register' this mod as a mod
-MODULEDEFS(SelfMsg, "Change a public buf")
+MODULEDEFS(SelfMsg, "Record your own messages")
