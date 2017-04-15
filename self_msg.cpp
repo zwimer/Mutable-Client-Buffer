@@ -7,9 +7,23 @@
 #include <vector>
 #include <queue>
 
-//TODO
-#include <fstream>
-# define log(x) { std::ofstream m("/Users/zwimer/Desktop/log.txt", std::ios::app); m << __PRETTY_FUNCTION__ << " - " << __LINE__ << ": " << x << std::endl; m.close();}
+// Debug mode
+#define DEBUG_MODE
+#ifdef DEBUG_MODE
+
+	#include <fstream>
+
+	// Log a message
+	#define log(x) { auto l = __LINE__; \
+		std::ofstream m("/Users/zwimer/Desktop/log.txt", std::ios::app); \
+		m << __PRETTY_FUNCTION__ << " - " << l << ": " << x << std::endl; \
+		m.close(); \
+	}
+
+	// For ease
+	typedef std::stringstream sstr;
+
+#endif
 
 /************************************************************/
 /*															*/
@@ -53,15 +67,6 @@ struct SMH::Msg {
 		when(whn), what(wht), format(fmt) {}
 	~Msg() {}
 
-	// Assignment operator
-	Msg & operator= ( const Msg & m ) {
-		when.tv_usec = m.when.tv_usec;
-		when.tv_sec = m.when.tv_sec;
-		format = m.format;
-		what = m.what;
-		return * this;
-	}
-
 	// Representation
 	timeval when;
 	CString what;
@@ -71,18 +76,24 @@ struct SMH::Msg {
 // Define a comparator for Msg
 struct SMH::MsgCompare {
 	bool operator() (const Msg& a, const Msg& b) {
-//TODO: 0 comes last
+		if (!a.when.tv_sec && !a.when.tv_usec && !a.what.size() && !a.format.size())
+			return true;
+		else if (!b.when.tv_sec && !b.when.tv_usec && !b.what.size() && !b.format.size())
+			return false;
 		return timercmp( & a.when, & b.when, > );
 	}
 };
 
-//TODO: const cast
+#ifdef DEBUG_MODE
 
-//TODO: remove
+// Print a Msg
 std::ostream & operator << (std::ostream & str, const SMH::Msg s) {
 	str << "Msg( " << s.when.tv_sec << ", " << s.what << ", " << s.format;
 	return str;
 }  
+
+#endif
+
 
 /************************************************************/
 /*															*/
@@ -156,10 +167,6 @@ SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
 	// Record what was sent where and when
 	sent[who].push( SMH::Msg(v , sMessage) );
 
-	//TODO:
-	std::stringstream s; s << who << " sent " << sMessage << '\n';
-	log(s.str());
-
 	// Nothing bad happened
 	return CONTINUE;
 }
@@ -174,13 +181,15 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	CString format = ch.FindNick(cli.GetNick())->GetHostMask();
 
 	//TODO:
-	std::stringstream s; 
+	sstr s; s << "\n\n\n\n";
 	s << "Startup: Intercept buf from " << ch.GetName() << '\n';
 	s << "\t - Nick = " << cli.GetNick() << '\n';
 	s << "\t - HM = " << format << '\n';
 	s << "Adding lines now:" << '\n';
 
-	format = ":" + format + " PRIVMSG #rpisec :{text}";
+	// Create the format string
+	format = ":" + format + " PRIVMSG ";
+	format += ch.GetName() + " :{text}";
 
 	// The new buffer to be used;Make the list of sent messages the new buffer
 	SMH::MsgList newBuf;
