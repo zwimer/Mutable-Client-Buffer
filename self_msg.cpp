@@ -3,18 +3,13 @@
 #include <znc/Query.h>
 #include <znc/Chan.h>
 
-#include <sstream>
-#include <vector>
 #include <queue>
-
-
-// Enable debug mode
-#define DEBUG_MODE
 
 
 // Debug mode
 #ifdef DEBUG_MODE
 
+	#include <sstream>
 	#include <fstream>
 
 	// Log a message
@@ -24,10 +19,8 @@
 		m.close(); \
 	}
 
-	// For ease
-	typedef std::stringstream sstr;
-
 #endif
+
 
 /************************************************************/
 /*															*/
@@ -52,7 +45,6 @@ namespace SMH {
 		std::vector<Msg>,
 		MsgCompare
 	> MsgList;
-
 };
 
 /************************************************************/
@@ -80,10 +72,14 @@ struct SMH::Msg {
 // Define a comparator for Msg
 struct SMH::MsgCompare {
 	bool operator() (const Msg& a, const Msg& b) {
+
+		// Zero Msgs should always be on the bottom of the queue
 		if (!a.when.tv_sec && !a.when.tv_usec && !a.what.size() && !a.format.size())
 			return true;
 		else if (!b.when.tv_sec && !b.when.tv_usec && !b.what.size() && !b.format.size())
 			return false;
+
+		// Otherwise return a.when > b.when
 		return timercmp( & a.when, & b.when, > );
 	}
 };
@@ -165,10 +161,8 @@ bool SelfMsg::OnBoot() {
 //Read all messages the user sends
 SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
 	
-	// Record the time
+	// Record the Msg and all needed info
 	timeval v; gettimeofday( &v, nullptr ); 
-
-	// Record what was sent where and when
 	sent[who].push( SMH::Msg(v , sMessage) );
 
 	// Nothing bad happened
@@ -184,25 +178,17 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	// Get user's hostmask, and create a format from it
 	CString format = ch.FindNick(cli.GetNick())->GetHostMask();
 
-	//TODO:
-	sstr s; s << "\n\n\n\n";
-	s << "Startup: Intercept buf from " << ch.GetName() << '\n';
-	s << "\t - Nick = " << cli.GetNick() << '\n';
-	s << "\t - HM = " << format << '\n';
-	s << "Adding lines now:" << '\n';
-
-	// Create the format string
+	// Complete the format string
 	format = ":" + format + " PRIVMSG ";
 	format += ch.GetName() + " :{text}";
 
-	// The new buffer to be used;Make the list of sent messages the new buffer
+	// The new buffer to be used
 	SMH::MsgList newBuf;
 
 	// Update each line's who in sent, and add them all to newBuf
 	for ( SMH::MsgList & mySent = sent[ch.GetName()] ; mySent.size(); mySent.pop() ) {
 		((SMH::Msg*) (&mySent.top()))->format = format;
 		newBuf.push(mySent.top());
-		s << "\t\t Added (sent): " << mySent.top() << '\n';
 	}
 
 	// Add each line in the buf to sent
@@ -210,7 +196,6 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	for ( int i = 0; i < n; i++ ) {
 		const CBufLine & tmp = buf->GetBufLine( i );
 		newBuf.push( SMH::Msg( tmp.GetTime(), tmp.GetText(), tmp.GetFormat() ) );
-		s << "\t\t Added (buf): " << SMH::Msg( tmp.GetTime(), tmp.GetText(), tmp.GetFormat() )<< '\n';
 	}
 
 	// Clear the old buf
@@ -219,13 +204,10 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 	// Update buf with the entries in newBufLines
 	for ( int i = 0; newBuf.size(); newBuf.pop() ) {
 		const SMH::Msg & nxt = newBuf.top();
-		s << "\t\t\t NEW: " << nxt << '\n';
 		buf->AddLine( nxt.format, nxt.what );
 		((CBufLine*) &(buf->GetBufLine(i++)))->SetTime( nxt.when );
 	}
 	
-	log(s.str());
-
 	// Clear the (now old) sent buffer
 	SMH::MsgList & m = sent[ch.GetName()];
 	while (m.size()) m.pop();
