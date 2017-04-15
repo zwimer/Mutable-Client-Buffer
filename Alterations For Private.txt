@@ -1,0 +1,22 @@
+For private buffers, the arguments are different so the module has to be changed.
+
+virtual EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client);
+
+virtual EModRet OnChanBufferStarting(CChan& Chan, CClient& Client);
+
+Instead of a CChan we are given a CQuery. The functionality of our module
+shouldn't change too much since the Query also has a CBuffer and similar functions
+to interact with it. However, getting the hostmask would be more difficult.
+
+CString format = ch.FindNick(cli.GetNick())->GetHostMask();
+
+Queries have a private variable 
+CIRCNetwork* m_pNetwork;
+And CIRCNetwork has a function GetIRCNick()
+
+Instad this code could look like
+
+Query.m_pNetwork->GetIRCNick()->GetHostMask(); 
+
+if we had some way to access the pNetwork, we could call the get IRC Nick function 
+and proceed with the module.
