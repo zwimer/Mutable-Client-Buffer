@@ -54,23 +54,35 @@ namespace SMH {
 /************************************************************/
 
 
-// Represents a message
+//! Represents a message
+/*! This struct contains a message, its format, and when it was sent */
 struct SMH::Msg {
 
-	// Constructors and destructor
-	Msg(const timeval& whn, const CString wht) : when(whn), what(wht) {}
+	//! Constructor
+	/*! This constructor takes in a timeval and message and creates the Msg from them. This constructor leaves the format blank */
+	Msg(const timeval& whn, const CString wht) : when(whn), what(wht), format("") {}
+
+	//! Constructor 
+	/* This constructor takes in a timeval, a message, and a format, then creates the Msg from them */
 	Msg(const timeval& whn, const CString wht, const CString & fmt) : 
 		when(whn), what(wht), format(fmt) {}
-	~Msg() {}
+	
 
 	// Representation
+
+	//! When the message was sent
 	timeval when;
+	//! The message
 	CString what;
+	//! The format of the message
 	CString format;
 };
 
-// Define a comparator for Msg
+//! A comparator for Msg
 struct SMH::MsgCompare {
+
+	//! Compares two messages
+	/*! Returns true if all bits in a are 0, false if all bits in b are 0. Otherwise, return a.when > b.when */
 	bool operator() (const Msg& a, const Msg& b) {
 
 		// Zero Msgs should always be on the bottom of the queue
@@ -84,6 +96,7 @@ struct SMH::MsgCompare {
 	}
 };
 
+// Debug mode
 #ifdef DEBUG_MODE
 
 	// Print a Msg
@@ -102,21 +115,31 @@ struct SMH::MsgCompare {
 /************************************************************/
 
 
-// Our module
+//! A znc module that allows one to receive their own messages.
+/*!
+	This module will record all messages the user sends. When the user next connects to znc and requests their buffer, this module will add the user's messages to the buffer they receive.
+*/
 class SelfMsg : public CModule {
 public:
 
-	//Constructor and destructor
+	//! Constructor
+	/*! The normal mod constructor */
 	MODCONSTRUCTOR(SelfMsg) {}
-	~SelfMsg() override { PutModule("I'm being unloaded!"); }
 
-	//When the system is booted up (nothing needs to happen)
+	//! Destructor
+	/*! Inform the user that this module has been unloaded */	
+	~SelfMsg() override { PutModule("The selfMsg module is being unloaded!"); }
+
+	//! Called when znc is first turned on
+	/*! Does nothing but override Module's on boot function */
 	bool OnBoot() override;
 
-	//Read all messages the user sends
+	//! Read every message the user sends
+	/*! This function is called whenever the user sends a message. This function records each messages, relevant information, then stores it in the 'sent' map */
 	EModRet OnUserMsg(CString& sTarget, CString& sMessage) override;
 
-	// Intercept the buffer being sent to the user
+	//! Alter the buffer being sent to the user
+	/*! This function intercepts the buffer being sent to the user. It then inserts each message the user sent into the buffer and finally clears the 'sent' map. */
 	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override;
 
 	// Versions 1.7+
@@ -125,6 +148,7 @@ public:
 private:
 
 	// Store what messages the user sent to who
+	/*! This map has CString key denoting who each message was sent to. The value in the map is a list of messages sorted by when each message was sent. This map will hold all messages that must be added to the buffer when it is next intercepted. */
 	std::map< CString, SMH::MsgList > sent;
 };
 
@@ -136,7 +160,8 @@ private:
 /************************************************************/
 
 
-// Information for the web client
+//! Information for the web client
+/*! This function takes in no arguments */
 template <> void TModInfo<SelfMsg>(CModInfo& Info) {
 	Info.SetHasArgs(false);
 }

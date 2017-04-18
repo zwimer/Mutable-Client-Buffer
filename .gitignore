@@ -30,3 +30,7 @@
 
 # Symlinks
 mods
+
+# Doxygen build files
+latex/*
+html/*
