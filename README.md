@@ -1,10 +1,10 @@
 # znc-self-msg
 
-Many irc clients that can connect to znc are not 'irc3.0 capable'. As such, they do not have the ability to recieve their own messages. This module fixes that issue, giving self-message capability to _all_ clients that connect to znc. For more info, please go to the [wiki](https://github.com/zwimer/znc-selfmsg/wiki)
+Many irc clients that can connect to znc are not 'irc3.0 capable'. As such, they do not have the ability to recieve their own messages. This module fixes that issue, giving self-message capability to _all_ clients that connect to znc. For more info, please go to the [wiki](https://github.com/zwimer/znc-selfmsg/wiki). For help with anything, more information on any topic, or FAQs, please go to our [Help and FAQ page](https://github.com/zwimer/znc-selfmsg/wiki/Help-and-FAQ).
 
 ## Disclaimer
 
-This application is written for znc 1.6.4. Unfortunatly, the functions required for this to work for private channels do not yet exist. They will however be implemented in 1.7. Once 1.7 has been released and is stable, adding private message support should be trivial but unil then this will only work for public buffers.
+This application is written for znc 1.6.4. Unfortunatly, the functions required for this to work for private channels do not yet exist. They will however be implemented in 1.7. Once 1.7 has been released and is stable, adding private message support should be trivial but unil then this will only work for public buffers. If you wish to know how it will be changed once 1.7 is released or wish to do it yourself, click [here](https://github.com/zwimer/znc-selfmsg/wiki/Changes-for-Private-Channels) to visit that page of our wiki.
 
 ## Requirements
 
@@ -29,7 +29,7 @@ Finally, relocate the .so file znc-buildmod created to znc's modules folder
 mv ./selfmsg.so ~/.znc/modules
 ```
 
-If this fails because no modules folder exists in ~/.znc, simply create it with
+If this fails because no modules folder exists in ~/.znc, simply create it first with
 ```bash
 mkdir ~/.znc/modules
 ```
