@@ -12,7 +12,8 @@
 	#include <sstream>
 	#include <fstream>
 
-	// Log a message
+	//! Log a message
+	/*! This is enabled only in debug mode */
 	#define log(x) { auto l = __LINE__; \
 		std::ofstream m("/Users/zwimer/Desktop/log.txt", std::ios::app); \
 		m << __PRETTY_FUNCTION__ << " - " << l << ": " << x << std::endl; \
@@ -29,8 +30,8 @@
 /************************************************************/
 
 
-// Don't pollute the global namespace
-// SMH = Self Msg Helpers
+//! A namespace to hold helper classes of SelfMsg
+/*! Don't pollute the global namespace with these classes. Instead, put them into a namespace. SMH stands for Self Msg Helpers. */
 namespace SMH {
 
 	// A message class
@@ -39,7 +40,8 @@ namespace SMH {
 	// Comparators
 	struct MsgCompare;
 
-	// For clarity: MsgLine
+	//! MsgLine is a priority queue of Msgs sorted via MsgCompare
+	/*! The queue is stored via a vector */
 	typedef std::priority_queue <
 		Msg,
 		std::vector<Msg>,
@@ -68,7 +70,7 @@ struct SMH::Msg {
 		when(whn), what(wht), format(fmt) {}
 	
 
-	// Representation
+	// Representation:
 
 	//! When the message was sent
 	timeval when;
@@ -99,7 +101,8 @@ struct SMH::MsgCompare {
 // Debug mode
 #ifdef DEBUG_MODE
 
-	// Print a Msg
+	//! Print a Msg to a stream
+	/*! This is enabled only in debug mode */
 	std::ostream & operator << (std::ostream & str, const SMH::Msg s) {
 		str << "Msg( " << s.when.tv_sec << ", " << s.what << ", " << s.format;
 		return str;
@@ -143,11 +146,12 @@ public:
 	EModRet OnChanBufferStarting( CChan& ch, CClient & cli ) override;
 
 	// Versions 1.7+
+	
 	// EModRet OnPrivBufferStarting(CQuery& Query, CClient& Client) override;
 
-private:
+protected:
 
-	// Store what messages the user sent to who
+	//! Store each messages the user sent to who
 	/*! This map has CString key denoting who each message was sent to. The value in the map is a list of messages sorted by when each message was sent. This map will hold all messages that must be added to the buffer when it is next intercepted. */
 	std::map< CString, SMH::MsgList > sent;
 };
@@ -174,14 +178,14 @@ template <> void TModInfo<SelfMsg>(CModInfo& Info) {
 /************************************************************/
 
 
-//When the system is booted up (nothing needs to happen)
+// When the system is booted up (nothing needs to happen)
 bool SelfMsg::OnBoot() {
 	// This is called when the app starts up (only modules that are loaded
 	// in the config will get this event)
 	return true;
 }
 
-//Read all messages the user sends
+// Read all messages the user sends
 SelfMsg::EModRet SelfMsg::OnUserMsg(CString& who, CString& sMessage) {
 	
 	// Record the Msg and all needed info
@@ -247,5 +251,6 @@ SelfMsg::EModRet SelfMsg::OnChanBufferStarting( CChan& ch, CClient & cli ) {
 /************************************************************/
 
 
-// 'Register' this mod as a mod
+//! 'Register' this mod as a mod
+/*! Without this you mod cannot be used */
 MODULEDEFS(SelfMsg, "Record your own messages")
