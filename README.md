@@ -8,8 +8,7 @@ This application is written for znc 1.6.4. Unfortunatly, the functions required 
 
 ## Requirements
 
-This application requires znc 1.6.4
-For installation, it is strongly recommended you have znc-buildmod unless you wish to compile and link this manually.
+This module requires znc 1.6.4. To build the [documentation](#documentation) for this module, Doxygen 1.8.3 is required. For installation, it is _strongly recommended_ you have znc-buildmod unless you wish to compile and link this manually.
 
 ## Installation Instructions
 
@@ -38,3 +37,12 @@ mkdir ~/.znc/modules
 ## Usage
 
 To use this module either load it with /LoadMod or via webadmin. After that it should work.
+
+## Documentation
+
+Additional documentation to each component of self\_msg.cpp is provided via Doxygen. To generate this documentation, from the znc-selfmsg directory, run the following
+```bash
+doxygen Doxyfile
+```
+
+The documentation 'index.html' is located within Documentation/html/
