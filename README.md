@@ -1,6 +1,6 @@
 # znc-self-msg
 
-Many irc clients that can connect to znc are not 'irc3.0 capable'. As such, they do not have the ability to recieve their own messages. This module fixes that issue, giving self-message capability to _all_ clients that connect to znc. For more info, please go to the [wiki](https://github.com/zwimer/znc-selfmsg/wiki). For help with anything, more information on any topic, or FAQs, please go to our [Help and FAQ page](https://github.com/zwimer/znc-selfmsg/wiki/Help-and-FAQ).
+Many irc clients that can connect to znc are not 'irc3.0 capable'. As such, they do not have the ability to recieve their own messages. This module fixes that issue, giving self-message capability to _all_ clients that connect to znc. For more info, please go to the [wiki](https://github.com/zwimer/znc-selfmsg/wiki). For help with anything, more information on any topic, or setup guides, please go to either our [Guides Information and Help](https://github.com/zwimer/znc-selfmsg/wiki/Guides,-Information,-and-Help) wiki page or our [FAQ](https://github.com/zwimer/znc-selfmsg/wiki/FAQ) wiki page.
 
 ## Disclaimer
 
@@ -8,12 +8,11 @@ This application is written for znc 1.6.4. Unfortunatly, the functions required 
 
 ## Requirements
 
-This module requires znc 1.6.4. To build the [documentation](#documentation) for this module, Doxygen 1.8.3 is required. For installation, it is _strongly recommended_ you have znc-buildmod unless you wish to compile and link this manually.
+This module requires znc 1.6.4. Documentation is provided, however if you wish to build the [documentation](#documentation) for this module for yourself, Doxygen 1.8.3 is required. For installation, it is _strongly recommended_ you have znc-buildmod unless you wish to compile and link this manually.
 
 ## Installation Instructions
 
 First clone this repository
-Then git clone this repository
 ```bash
 git clone https://github.com/zwimer/znc-selfmsg
 ```
@@ -40,7 +39,7 @@ To use this module either load it with /LoadMod or via webadmin. After that it s
 
 ## Documentation
 
-Additional documentation to each component of self\_msg.cpp is provided via Doxygen. To generate this documentation, from the znc-selfmsg directory, run the following
+Additional documentation to each component of self\_msg.cpp is provided and can also be found [here](https://zwimer.github.io/znc-selfmsg/). This documentation was generated via Doxygen. If you wish to generate this documentation yourself, from the znc-selfmsg directory, run the following
 ```bash
 doxygen Doxyfile
 ```
