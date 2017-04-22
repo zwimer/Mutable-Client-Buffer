@@ -1,0 +1,38 @@
+\hypertarget{namespace_s_m_h}{}\section{S\+MH Namespace Reference}
+\label{namespace_s_m_h}\index{S\+MH@{S\+MH}}
+
+
+A namespace to hold helper classes of \hyperlink{class_self_msg}{Self\+Msg}.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_s_m_h_1_1_msg}{Msg}
+\begin{DoxyCompactList}\small\item\em Represents a message. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_s_m_h_1_1_msg_compare}{Msg\+Compare}
+\begin{DoxyCompactList}\small\item\em A comparator for \hyperlink{struct_s_m_h_1_1_msg}{Msg}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::priority\+\_\+queue$<$ \hyperlink{struct_s_m_h_1_1_msg}{Msg}, std\+::vector$<$ \hyperlink{struct_s_m_h_1_1_msg}{Msg} $>$, \hyperlink{struct_s_m_h_1_1_msg_compare}{Msg\+Compare} $>$ \hyperlink{namespace_s_m_h_a577a58a147f501590720badab28c2c98}{Msg\+List}
+\begin{DoxyCompactList}\small\item\em Msg\+Line is a priority queue of Msgs sorted via \hyperlink{struct_s_m_h_1_1_msg_compare}{Msg\+Compare}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A namespace to hold helper classes of \hyperlink{class_self_msg}{Self\+Msg}. 
+
+Don\textquotesingle{}t pollute the global namespace with these classes. Instead, put them into a namespace. \hyperlink{namespace_s_m_h}{S\+MH} stands for Self \hyperlink{struct_s_m_h_1_1_msg}{Msg} Helpers. 
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{namespace_s_m_h_a577a58a147f501590720badab28c2c98}\label{namespace_s_m_h_a577a58a147f501590720badab28c2c98}} 
+\index{S\+MH@{S\+MH}!Msg\+List@{Msg\+List}}
+\index{Msg\+List@{Msg\+List}!S\+MH@{S\+MH}}
+\subsubsection{\texorpdfstring{Msg\+List}{MsgList}}
+{\footnotesize\ttfamily typedef std\+::priority\+\_\+queue$<$ \hyperlink{struct_s_m_h_1_1_msg}{Msg}, std\+::vector$<$\hyperlink{struct_s_m_h_1_1_msg}{Msg}$>$, \hyperlink{struct_s_m_h_1_1_msg_compare}{Msg\+Compare} $>$ \hyperlink{namespace_s_m_h_a577a58a147f501590720badab28c2c98}{S\+M\+H\+::\+Msg\+List}}
+
+
+
+Msg\+Line is a priority queue of Msgs sorted via \hyperlink{struct_s_m_h_1_1_msg_compare}{Msg\+Compare}. 
+
+The queue is stored via a vector 

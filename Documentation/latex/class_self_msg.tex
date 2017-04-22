@@ -1,0 +1,110 @@
+\hypertarget{class_self_msg}{}\section{Self\+Msg Class Reference}
+\label{class_self_msg}\index{Self\+Msg@{Self\+Msg}}
+
+
+A znc module that allows one to receive their own messages.  
+
+
+Inheritance diagram for Self\+Msg\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_self_msg}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_self_msg_a7eb533ec01cd81c8907fcf3a0ebd078e}{M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR} (\hyperlink{class_self_msg}{Self\+Msg})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_self_msg_a7febe41f96890d89051a91840da84fab}{$\sim$\+Self\+Msg} () override
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+bool \hyperlink{class_self_msg_a59bd01047737a3b30ae430fc3612653d}{On\+Boot} () override
+\begin{DoxyCompactList}\small\item\em Called when znc is first turned on. \end{DoxyCompactList}\item 
+E\+Mod\+Ret \hyperlink{class_self_msg_ae86a578c56e20230f89d776e02b089d5}{On\+User\+Msg} (C\+String \&s\+Target, C\+String \&s\+Message) override
+\begin{DoxyCompactList}\small\item\em Read every message the user sends. \end{DoxyCompactList}\item 
+E\+Mod\+Ret \hyperlink{class_self_msg_a8c7c5d393c196048cd51b63bc8ba59b1}{On\+Chan\+Buffer\+Starting} (C\+Chan \&ch, C\+Client \&cli) override
+\begin{DoxyCompactList}\small\item\em Alter the buffer being sent to the user. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::map$<$ C\+String, \hyperlink{namespace_s_m_h_a577a58a147f501590720badab28c2c98}{S\+M\+H\+::\+Msg\+List} $>$ \hyperlink{class_self_msg_ae2dc542caa1a3f5ae45e6de96d37cb22}{sent}
+\begin{DoxyCompactList}\small\item\em Store each messages the user sent to who. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A znc module that allows one to receive their own messages. 
+
+This module will record all messages the user sends. When the user next connects to znc and requests their buffer, this module will add the user\textquotesingle{}s messages to the buffer they receive. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_self_msg_a7febe41f96890d89051a91840da84fab}\label{class_self_msg_a7febe41f96890d89051a91840da84fab}} 
+\index{Self\+Msg@{Self\+Msg}!````~Self\+Msg@{$\sim$\+Self\+Msg}}
+\index{````~Self\+Msg@{$\sim$\+Self\+Msg}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{$\sim$\+Self\+Msg()}{~SelfMsg()}}
+{\footnotesize\ttfamily Self\+Msg\+::$\sim$\+Self\+Msg (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}}
+
+
+
+Destructor. 
+
+Inform the user that this module has been unloaded 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_self_msg_a7eb533ec01cd81c8907fcf3a0ebd078e}\label{class_self_msg_a7eb533ec01cd81c8907fcf3a0ebd078e}} 
+\index{Self\+Msg@{Self\+Msg}!M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR@{M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR}}
+\index{M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR@{M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+O\+R()}{MODCONSTRUCTOR()}}
+{\footnotesize\ttfamily Self\+Msg\+::\+M\+O\+D\+C\+O\+N\+S\+T\+R\+U\+C\+T\+OR (\begin{DoxyParamCaption}\item[{\hyperlink{class_self_msg}{Self\+Msg}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+The normal mod constructor \mbox{\Hypertarget{class_self_msg_a59bd01047737a3b30ae430fc3612653d}\label{class_self_msg_a59bd01047737a3b30ae430fc3612653d}} 
+\index{Self\+Msg@{Self\+Msg}!On\+Boot@{On\+Boot}}
+\index{On\+Boot@{On\+Boot}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{On\+Boot()}{OnBoot()}}
+{\footnotesize\ttfamily bool Self\+Msg\+::\+On\+Boot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}}
+
+
+
+Called when znc is first turned on. 
+
+Does nothing but override Module\textquotesingle{}s on boot function \mbox{\Hypertarget{class_self_msg_a8c7c5d393c196048cd51b63bc8ba59b1}\label{class_self_msg_a8c7c5d393c196048cd51b63bc8ba59b1}} 
+\index{Self\+Msg@{Self\+Msg}!On\+Chan\+Buffer\+Starting@{On\+Chan\+Buffer\+Starting}}
+\index{On\+Chan\+Buffer\+Starting@{On\+Chan\+Buffer\+Starting}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{On\+Chan\+Buffer\+Starting()}{OnChanBufferStarting()}}
+{\footnotesize\ttfamily Self\+Msg\+::\+E\+Mod\+Ret Self\+Msg\+::\+On\+Chan\+Buffer\+Starting (\begin{DoxyParamCaption}\item[{C\+Chan \&}]{ch,  }\item[{C\+Client \&}]{cli }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}}
+
+
+
+Alter the buffer being sent to the user. 
+
+This function intercepts the buffer being sent to the user. It then inserts each message the user sent into the buffer and finally clears the \textquotesingle{}sent\textquotesingle{} map. \mbox{\Hypertarget{class_self_msg_ae86a578c56e20230f89d776e02b089d5}\label{class_self_msg_ae86a578c56e20230f89d776e02b089d5}} 
+\index{Self\+Msg@{Self\+Msg}!On\+User\+Msg@{On\+User\+Msg}}
+\index{On\+User\+Msg@{On\+User\+Msg}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{On\+User\+Msg()}{OnUserMsg()}}
+{\footnotesize\ttfamily Self\+Msg\+::\+E\+Mod\+Ret Self\+Msg\+::\+On\+User\+Msg (\begin{DoxyParamCaption}\item[{C\+String \&}]{s\+Target,  }\item[{C\+String \&}]{s\+Message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}}
+
+
+
+Read every message the user sends. 
+
+This function is called whenever the user sends a message. This function records each messages, relevant information, then stores it in the \textquotesingle{}sent\textquotesingle{} map 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_self_msg_ae2dc542caa1a3f5ae45e6de96d37cb22}\label{class_self_msg_ae2dc542caa1a3f5ae45e6de96d37cb22}} 
+\index{Self\+Msg@{Self\+Msg}!sent@{sent}}
+\index{sent@{sent}!Self\+Msg@{Self\+Msg}}
+\subsubsection{\texorpdfstring{sent}{sent}}
+{\footnotesize\ttfamily std\+::map$<$ C\+String, \hyperlink{namespace_s_m_h_a577a58a147f501590720badab28c2c98}{S\+M\+H\+::\+Msg\+List} $>$ Self\+Msg\+::sent\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Store each messages the user sent to who. 
+
+This map has C\+String key denoting who each message was sent to. The value in the map is a list of messages sorted by when each message was sent. This map will hold all messages that must be added to the buffer when it is next intercepted. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Self\+Msg.\+cpp\end{DoxyCompactItemize}
