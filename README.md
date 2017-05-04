@@ -33,6 +33,8 @@ If this fails because no modules folder exists in ~/.znc, simply create it first
 mkdir ~/.znc/modules
 ```
 
+![](ReadMeFiles/Installation.gif)
+
 ## Usage
 
 To use this module either load it with /LoadMod or via webadmin. After that it should work.
