@@ -33,7 +33,7 @@ If this fails because no modules folder exists in ~/.znc, simply create it first
 mkdir ~/.znc/modules
 ```
 
-![](ReadMeFiles/Installation.gif)
+![](https://github.com/zwimer/znc-selfmsg/blob/master/ReadMeFiles/Installation.gif)
 
 ## Usage
 
